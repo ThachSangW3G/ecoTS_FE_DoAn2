@@ -58,6 +58,10 @@ final kLableTextStyleMiniumGrey = GoogleFonts.montserrat(
     textStyle: const TextStyle(
         color: AppColors.stack, fontWeight: FontWeight.w500, fontSize: 15.0));
 
+final kLableTextStyleMiniumBlack = GoogleFonts.montserrat(
+    textStyle: const TextStyle(
+        fontWeight: FontWeight.w500, fontSize: 15.0));
+
 final kLableTextStyle18Grey = GoogleFonts.montserrat(
     textStyle: const TextStyle(
         color: AppColors.stack, fontWeight: FontWeight.w500, fontSize: 18.0));
@@ -125,6 +129,19 @@ final kLableTextBlackW600Size16 = GoogleFonts.montserrat(
   fontWeight: FontWeight.w600,
 ));
 
+final kLableTextBlackW600Size13 = GoogleFonts.montserrat(
+    textStyle: const TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+    ));
+
+final kLableTextBlackW600Size15 = GoogleFonts.montserrat(
+    textStyle:  TextStyle(
+      color: AppColors.white,
+      fontSize: 15,
+      fontWeight: FontWeight.w600,
+    ));
+
 final kLableTextGreenWeightW600Size20 = GoogleFonts.montserrat(
     textStyle: const TextStyle(
       fontSize: 20,
@@ -155,6 +172,14 @@ final kLableTextWhiteW600Size16 = GoogleFonts.montserrat(
     ));
 
 
+
+final kLableTextWhiteW400Size13 = GoogleFonts.montserrat(
+    textStyle: const TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+        color: AppColors.white
+    ));
+
 final kLableTextGreenWeightW400Size16 = GoogleFonts.montserrat(
     textStyle: const TextStyle(
         fontSize: 16,
@@ -180,6 +205,12 @@ final kLableTextBlackW300Size14 = GoogleFonts.montserrat(
   fontSize: 14,
   fontWeight: FontWeight.w300,
 ));
+
+final kLableTextBlackW600Size14 = GoogleFonts.montserrat(
+    textStyle: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+    ));
 
 final kLableChiDuong = GoogleFonts.montserrat(
     textStyle: const TextStyle(

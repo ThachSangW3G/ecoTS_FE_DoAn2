@@ -1,4 +1,5 @@
-
+import 'package:ecots_fe/screens/homes/home_screen.dart';
+import 'package:ecots_fe/screens/new_feeds/create_feed.dart';
 import 'package:ecots_fe/screens/rewards/reward_screen.dart';
 import 'package:ecots_fe/screens/splash/load_logo.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'constants/app_colors.dart';
 import 'controllers/camera_controller.dart';
 import 'screens/deliveries/delivery_screen.dart';
+import 'screens/new_feeds/new_feed_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.green),
         useMaterial3: true,
       ),
-      home: const DeliveryScreen(),
+      home:  CreateFeeedScreen(),
     );
   }
 }

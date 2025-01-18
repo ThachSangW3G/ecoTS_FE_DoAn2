@@ -245,9 +245,11 @@ class _NewFeedCardState extends State<NewFeedCard> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildActionButton(Icons.thumb_up, 'Like'),
-                    _buildActionButton(Icons.comment, 'Comment'),
-                    _buildActionButton(Icons.share, 'Share'),
+                    _buildActionButton(Icons.thumb_up, 'Like', () {}),
+                    _buildActionButton(Icons.comment, 'Comment', () {
+                      Get.to(() => CommentsSection(newsfeed: widget.newsfeed));
+                    }),
+                    _buildActionButton(Icons.share, 'Share', () {}),
                   ],
                 ),
               ),
@@ -286,11 +288,9 @@ class _NewFeedCardState extends State<NewFeedCard> {
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label) {
+  Widget _buildActionButton(IconData icon, String label, VoidCallback? onTap) {
     return TextButton.icon(
-      onPressed: () {
-        Get.to(() => const CommentsSection());
-      },
+      onPressed: onTap,
       icon: Icon(icon, color: Colors.grey),
       label: Text(
         label,

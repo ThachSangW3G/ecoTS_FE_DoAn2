@@ -1,5 +1,4 @@
 import 'package:ecots_fe/screens/homes/home_screen.dart';
-import 'package:ecots_fe/screens/new_feeds/create_feed.dart';
 import 'package:ecots_fe/screens/rewards/reward_screen.dart';
 import 'package:ecots_fe/screens/splash/load_logo.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +52,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.green),
         useMaterial3: true,
       ),
-      home: const LoadLogo(),
+      home: const NewFeedScreen(),
     );
   }
 }

@@ -6,15 +6,17 @@ import 'package:http/http.dart' as http;
 import '../models/notifications/donate_point_model.dart';
 import '../models/notifications/notification_model.dart';
 import '../models/notifications/received_point_model.dart';
+import '../services/api_service.dart';
 
 class NotificationController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
   var receivedPointList = Rx<List<ReceivedPointModel>?>(null);
   var donatePointList = Rx<List<DonatePointModel>?>(null);
   var notificationList = Rx<List<NotificationModel>?>(null);
 
   Future<void> getAllreceivedPoint(int userId) async {
-    final uri = Uri.parse('$_baseURL/api/notifications/user/$userId');
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/api/notifications/user/$userId');
     final headers = {'Content-Type': 'application/json'};
 
     try {
@@ -52,8 +54,8 @@ class NotificationController extends GetxController {
   }
 
   Future<void> getAllDonatePoint(int userId) async {
-    final uri =
-        Uri.parse('$_baseURL/api/notifications/donation-history/$userId');
+    final uri = Uri.parse(
+        '${_apiService.baseUrl}/api/notifications/donation-history/$userId');
     final headers = {'Content-Type': 'application/json'};
 
     try {
@@ -91,7 +93,8 @@ class NotificationController extends GetxController {
   }
 
   Future<void> getAllNotifications() async {
-    final uri = Uri.parse('$_baseURL/api/notifications/notifications');
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/api/notifications/notifications');
     final headers = {'Content-Type': 'application/json'};
 
     try {

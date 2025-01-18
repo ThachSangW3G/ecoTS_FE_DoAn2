@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,9 +7,10 @@ import 'package:http/http.dart' as http;
 
 import '../models/points/point.dart';
 import '../models/wastes/waste.dart';
+import '../services/api_service.dart';
 
 class PointController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   var currentPoint = Rx<Point?>(null);
@@ -19,7 +19,8 @@ class PointController extends GetxController {
     final prefs = await _prefs;
     final accessToken = prefs.getString('tokenAccess');
 
-    final uri = Uri.parse('$_baseURL/point/get-user-point?token=$accessToken');
+    final uri = Uri.parse(
+        '${_apiService.baseUrl}/point/get-user-point?token=$accessToken');
 
     final headers = {'Content-Type': 'application/json'};
 
@@ -50,7 +51,7 @@ class PointController extends GetxController {
     try {
       print(params);
       final uri = Uri.parse(
-        '$_baseURL/point/admin/add-user-points-by-form?username=$username&email=$email&employeeId=$employeeId&$queryString',
+        '${_apiService.baseUrl}/point/admin/add-user-points-by-form?username=$username&email=$email&employeeId=$employeeId&$queryString',
       );
 
       final headers = {'Content-Type': 'application/json'};

@@ -3,17 +3,18 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:shared_preferences/shared_preferences.dart'; // Secure storage
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../services/api_service.dart'; // Secure storage
 
 class AuthController extends GetxController {
-  final String _baseURL =
-      'https://ecotsbe-production.up.railway.app'; // Replace with your actual URL
+  final ApiService _apiService = ApiService();
   //final _storage = FlutterSecureStorage(); // Secure storage instance
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<bool> login(String username, String password) async {
-    final uri = Uri.parse('$_baseURL/auth/signin');
+    final uri = Uri.parse('${_apiService.baseUrl}/auth/signin');
     final requestBody = {'username': username, 'password': password};
     final headers = {'Content-Type': 'application/json'};
 
@@ -59,7 +60,7 @@ class AuthController extends GetxController {
 
   Future<bool> signup(String email, String username, String fullname,
       String password, String dayOfBirth) async {
-    final uri = Uri.parse('$_baseURL/auth/signup');
+    final uri = Uri.parse('${_apiService.baseUrl}/auth/signup');
     final requestBody = {
       'email': email,
       'username': username,
@@ -69,6 +70,7 @@ class AuthController extends GetxController {
     };
     final headers = {'Content-Type': 'application/json'};
 
+    print("Tess");
     try {
       final response =
           await http.post(uri, body: jsonEncode(requestBody), headers: headers);
@@ -85,7 +87,8 @@ class AuthController extends GetxController {
   }
 
   Future<bool> forgotPassword(String email) async {
-    final uri = Uri.parse('$_baseURL/auth/forgot-password?email=$email');
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/auth/forgot-password?email=$email');
 
     final headers = {'Content-Type': 'application/json'};
 
@@ -111,7 +114,8 @@ class AuthController extends GetxController {
 
     final email = prefs.getString('email');
 
-    final uri = Uri.parse('$_baseURL/auth/check-otp?codeOTP=$otp&email=$email');
+    final uri = Uri.parse(
+        '${_apiService.baseUrl}/auth/check-otp?codeOTP=$otp&email=$email');
 
     print(uri);
     final headers = {'Content-Type': 'application/json'};
@@ -137,7 +141,7 @@ class AuthController extends GetxController {
     final email = prefs.getString('email');
     final otp = prefs.getInt('otp');
 
-    final uri = Uri.parse('$_baseURL/auth/reset-password');
+    final uri = Uri.parse('${_apiService.baseUrl}/auth/reset-password');
 
     final headers = {
       'Content-Type': 'application/json',

@@ -8,9 +8,10 @@ import 'package:rxdart/rxdart.dart';
 import '../models/achivement_levels/achivement_level.dart';
 import '../models/achivement_results/achivement_result.dart';
 import '../models/achivements/achivement.dart';
+import '../services/api_service.dart';
 
 class AchivementLevelController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
 
   final _achivementResultSubject = BehaviorSubject<List<AchivementResult>>();
   Stream<List<AchivementResult>> get achivementResultStream =>
@@ -36,7 +37,7 @@ class AchivementLevelController extends GetxController {
   Future<List<AchivementLevel>> getAchivementLevelsByAchievementId(
       Achivement achivement) async {
     final uri = Uri.parse(
-        '$_baseURL/achievement/get-achievement-level-by-achievement-id?achievementId=${achivement.id}');
+        '${_apiService.baseUrl}/achievement/get-achievement-level-by-achievement-id?achievementId=${achivement.id}');
 
     final headers = {'Content-Type': 'application/json'};
     try {
@@ -72,7 +73,7 @@ class AchivementLevelController extends GetxController {
 
   Future<void> fetchAchievementResults(int userId) async {
     final uri = Uri.parse(
-        '$_baseURL/achievement/result/get-all-achievement-progress?userId=$userId');
+        '${_apiService.baseUrl}/achievement/result/get-all-achievement-progress?userId=$userId');
 
     final headers = {'Content-Type': 'application/json'};
     try {

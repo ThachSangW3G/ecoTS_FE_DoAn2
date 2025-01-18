@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
@@ -12,3 +11,5 @@ const borderTextField =
 
 const borderRadiusTextField =
     EdgeInsets.symmetric(horizontal: 20, vertical: 15);
+
+const double defaultPadding = 16.0;

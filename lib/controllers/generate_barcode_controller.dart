@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../services/api_service.dart';
+
 class GenerateBarcodeController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   var barCode = Rx<Uint8List?>(null);
@@ -20,7 +22,7 @@ class GenerateBarcodeController extends GetxController {
     final email = userController.currentUser.value!.email!;
 
     final uri = Uri.parse(
-        '$_baseURL/generate/generate-qrcode?username=$username&email=$email');
+        '${_apiService.baseUrl}/generate/generate-qrcode?username=$username&email=$email');
 
     final headers = {'Content-Type': 'application/json'};
 

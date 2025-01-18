@@ -1,3 +1,4 @@
+import 'package:ecots_fe/controllers/location_controller.dart';
 import 'package:ecots_fe/screens/deliveries/delivery_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,8 @@ class DeliveryScreen extends StatefulWidget {
 }
 
 class _DeliveryScreenState extends State<DeliveryScreen> {
+  final LocationController _locationController = Get.put(LocationController());
+
   String? _selectedLocation; // Lưu vị trí được chọn
   final List<String> _locations = ['Location 1', 'Location 2', 'Location 3'];
   @override
@@ -21,7 +24,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         title: Text('Delivery', style: kLableTextStyleTilte22Green),
         centerTitle: true,
       ),
-      body:  Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,10 +50,10 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 ),
                 isExpanded: true,
                 underline: SizedBox(),
-                items: _locations.map((location) {
+                items: _locationController.locationList.value!.map((location) {
                   return DropdownMenuItem(
-                    value: location,
-                    child: Text(location),
+                    value: location.id.toString(),
+                    child: Text(location.locationName),
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -60,13 +63,38 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 },
               ),
             ),
+
+            SizedBox(
+              height: 20,
+            ),
+
+            Text(
+              "The package has been order",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "The package has been well received",
+              style: TextStyle(color: Colors.grey),
+            ),
+            SizedBox(height: 16),
+            // Track Info Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildInfoCard(Icons.receipt, "FLX23874926", "Track ID"),
+                _buildInfoCard(Icons.schedule, "3–5 days", "Estimate Time"),
+                _buildInfoCard(
+                    Icons.local_shipping, "2.4 kg", "Package Weight"),
+              ],
+            ),
             Spacer(),
             // Button
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {
-                 Get.to(() => DeliveryDetailScreen());
+                  Get.to(() => DeliveryDetailScreen());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -84,6 +112,24 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoCard(IconData icon, String title, String subtitle) {
+    return Column(
+      children: [
+        Icon(icon, color: Colors.red, size: 36),
+        SizedBox(height: 4),
+        Text(
+          title,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 4),
+        Text(
+          subtitle,
+          style: TextStyle(color: Colors.grey, fontSize: 12),
+        ),
+      ],
     );
   }
 }

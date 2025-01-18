@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:get/get.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,16 +7,18 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 import '../models/user.dart';
+import '../services/api_service.dart';
 
 class UserController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
 
   var currentUser = Rx<User?>(null);
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<void> getUserByToken(String accessToken) async {
-    final uri = Uri.parse('$_baseURL/user/token?token=$accessToken');
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/user/token?token=$accessToken');
 
     final headers = {'Content-Type': 'application/json'};
 
@@ -64,7 +65,7 @@ class UserController extends GetxController {
       String address,
       String phoneNumber,
       String personalId) async {
-    final uri = Uri.parse('$_baseURL/user/change-info');
+    final uri = Uri.parse('${_apiService.baseUrl}/user/change-info');
 
     final headers = {'Content-Type': 'application/json'};
 
@@ -97,7 +98,8 @@ class UserController extends GetxController {
     final prefs = await _prefs;
     final token = prefs.getString('tokenAccess');
 
-    final uri = Uri.parse('$_baseURL/user/upload-new-avatar?token=$token');
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/user/upload-new-avatar?token=$token');
 
     //final requestBody = {'avatarFile': base64Encode(await file.readAsBytes())};
 
@@ -130,7 +132,7 @@ class UserController extends GetxController {
     final prefs = await _prefs;
     final token = prefs.getString('tokenAccess');
 
-    final uri = Uri.parse('$_baseURL/user/change-password');
+    final uri = Uri.parse('${_apiService.baseUrl}/user/change-password');
 
     final requestBody = {
       'token': token,
@@ -154,5 +156,47 @@ class UserController extends GetxController {
       print(e);
       return false;
     }
+  }
+
+  Future<User?> getUserById(int id) async {
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/user/get-user-by-id?userId=$id');
+
+    final headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(utf8.decode(response.bodyBytes));
+        print(responseData['id']);
+        final int id = responseData['id'];
+
+        final String email = responseData['email'];
+        final String fullName = responseData['fullName'];
+
+        final String? phoneNumber = responseData['phoneNumber'];
+
+        final String? address = responseData['address'];
+        final String? gender = responseData['gender'];
+        final DateTime dayOfBirth =
+            DateTime.fromMillisecondsSinceEpoch(responseData['dayOfBirth']);
+
+        final String? personalId = responseData['personalId'];
+        final String? avatarUrl = responseData['avatarUrl'];
+
+        return User(
+            id: id,
+            fullName: fullName,
+            phoneNumber: phoneNumber,
+            address: address,
+            dayOfBirth: dayOfBirth,
+            personalId: personalId,
+            email: email,
+            gender: gender,
+            avatarUrl: avatarUrl);
+      }
+    } catch (e) {
+      throw e;
+    }
+    return null;
   }
 }

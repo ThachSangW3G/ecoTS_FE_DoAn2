@@ -6,12 +6,15 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
+import '../services/api_service.dart';
+
 class CameraControl extends GetxController {
   var cameras = Rx<List<CameraDescription>?>(null);
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
 
   Future<String?> getWasteClassification(int userId, File file) async {
-    final uri = Uri.parse("$_baseURL/detect/predict?userId=$userId");
+    final uri =
+        Uri.parse("${_apiService.baseUrl}/detect/predict?userId=$userId");
 
     print(uri);
     try {
@@ -51,7 +54,7 @@ class CameraControl extends GetxController {
 
   Future<bool> sendRespond(int userId, String description, File file) async {
     final uri = Uri.parse(
-        '$_baseURL/detect-response/send-response?userId=${userId}&description=${description}');
+        '${_apiService.baseUrl}/detect-response/send-response?userId=${userId}&description=${description}');
 
     try {
       var request = http.MultipartRequest('POST', uri);

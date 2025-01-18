@@ -20,4 +20,6 @@ class AppColors {
 
   static const Color greenLight = Color(0xFF7BF1B7);
   static const Color greenWeight = Color(0xff093923);
+  static const Color primaryColor = Color(0xFF2967FF);
+  static const Color grayColor = Color(0xFF8D8D8E);
 }

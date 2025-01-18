@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/donations/donation.dart';
+import '../services/api_service.dart';
 
 class DonationController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
 
   var donationList = Rx<List<Donation>?>(null);
   var upcomingDonationList = Rx<List<Donation>?>(null);
@@ -18,7 +18,7 @@ class DonationController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<void> getAllDonations() async {
-    final uri = Uri.parse('$_baseURL/donate/get-all-donations');
+    final uri = Uri.parse('${_apiService.baseUrl}/donate/get-all-donations');
     final headers = {'Content-Type': 'application/json'};
 
     //donationList.value.clear();
@@ -83,7 +83,7 @@ class DonationController extends GetxController {
     final token = prefs.getString('tokenAccess');
 
     final uri = Uri.parse(
-        '$_baseURL/donate/donate-points?Token=$token&donationId=$donationId&points=$points');
+        '${_apiService.baseUrl}/donate/donate-points?Token=$token&donationId=$donationId&points=$points');
     final headers = {'Content-Type': 'application/json'};
 
     try {
@@ -101,7 +101,8 @@ class DonationController extends GetxController {
   }
 
   Future<Donation?> getDonationById(int id) async {
-    final uri = Uri.parse('$_baseURL/donate/get-donation-by-id?id=$id');
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/donate/get-donation-by-id?id=$id');
     final headers = {'Content-Type': 'application/json'};
 
     try {
@@ -152,7 +153,7 @@ class DonationController extends GetxController {
   }
 
   Future<void> getOngoingDonations() async {
-    final uri = Uri.parse('$_baseURL/donate/ongoing');
+    final uri = Uri.parse('${_apiService.baseUrl}/donate/ongoing');
     final headers = {'Content-Type': 'application/json'};
 
     try {
@@ -205,7 +206,7 @@ class DonationController extends GetxController {
   }
 
   Future<void> getUpcomingDonations() async {
-    final uri = Uri.parse('$_baseURL/donate/upcoming');
+    final uri = Uri.parse('${_apiService.baseUrl}/donate/upcoming');
     final headers = {'Content-Type': 'application/json'};
 
     try {
@@ -258,7 +259,7 @@ class DonationController extends GetxController {
   }
 
   Future<void> getEndedDonations() async {
-    final uri = Uri.parse('$_baseURL/donate/ended');
+    final uri = Uri.parse('${_apiService.baseUrl}/donate/ended');
     final headers = {'Content-Type': 'application/json'};
 
     try {

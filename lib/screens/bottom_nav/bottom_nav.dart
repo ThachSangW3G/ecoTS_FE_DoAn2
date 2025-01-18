@@ -1,4 +1,4 @@
-
+import 'package:ecots_fe/screens/new_feeds/new_feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -42,7 +42,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
         navKey: ticketKey,
       ),
       NavModel(
-        page: const MiniGameScreen(),
+        // page: const MiniGameScreen(),
+        page: const NewFeedScreen(),
         navKey: giftKey,
       ),
       NavModel(

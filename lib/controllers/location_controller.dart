@@ -4,14 +4,15 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/locations/location.dart';
+import '../services/api_service.dart';
 
 class LocationController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
 
   var locationList = Rx<List<Location>?>(null);
 
   Future<void> getAllLocations() async {
-    final uri = Uri.parse('$_baseURL/location/get-all');
+    final uri = Uri.parse('${_apiService.baseUrl}/location/get-all');
     final headers = {'Content-Type': 'application/json'};
 
     try {

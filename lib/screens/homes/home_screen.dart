@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:ecots_fe/screens/rewards/reward_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
@@ -221,11 +222,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(() => const MiniGameScreen());
+                        Get.to(() => const Rewardscreen());
                       },
                       child: const MaterialItem(
-                          icon: 'assets/icons/gamepad.svg',
-                          title: 'Play & quiz'),
+                          icon: 'assets/icons/gamepad.svg', title: 'Rewards'),
                     ),
                     InkWell(
                       onTap: () {

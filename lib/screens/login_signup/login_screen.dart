@@ -1,4 +1,3 @@
-
 import 'package:ecots_fe/screens/login_signup/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +17,7 @@ import '../../controllers/donation_controller.dart';
 import '../../controllers/generate_barcode_controller.dart';
 import '../../controllers/location_controller.dart';
 import '../../controllers/point_controller.dart';
+import '../../controllers/rank_controller.dart';
 import '../../controllers/user_controller.dart';
 import '../../controllers/waste_controller.dart';
 import '../bottom_nav/bottom_nav.dart';
@@ -52,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
   AchivementLevelController achivementLevelController =
       Get.put(AchivementLevelController());
 
+  RankController rankController = Get.put(RankController());
+
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   bool _isLoading = false;
@@ -83,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await achivementController.fetchAchievements();
         await achivementLevelController
             .fetchAchievementResults(userController.currentUser.value!.id);
+        await rankController.getAllRanks();
 
         Get.to(() => const BottomNavigation());
       } else if (role != null && role == 'EMPLOYEE') {

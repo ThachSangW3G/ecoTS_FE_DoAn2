@@ -6,9 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
 import '../models/achivements/achivement.dart';
+import '../services/api_service.dart';
 
 class AchivementController extends GetxController {
-  final String _baseURL = 'https://ecotsbe-production.up.railway.app';
+  final ApiService _apiService = ApiService();
 
   final _achivementSubject = BehaviorSubject<List<Achivement>>();
   Stream<List<Achivement>> get achivementStream => _achivementSubject.stream;
@@ -23,7 +24,7 @@ class AchivementController extends GetxController {
   }
 
   Future<void> fetchAchievements() async {
-    final uri = Uri.parse('$_baseURL/achievement');
+    final uri = Uri.parse('${_apiService.baseUrl}/achievement');
     final headers = {'Content-Type': 'application/json'};
 
     try {

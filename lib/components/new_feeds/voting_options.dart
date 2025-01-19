@@ -1,8 +1,9 @@
-
+import 'package:ecots_fe/models/polls/poll.dart';
 import 'package:flutter/material.dart';
 
 class VotingOptions extends StatefulWidget {
-  const VotingOptions({super.key});
+  final Poll poll;
+  const VotingOptions({super.key, required this.poll});
 
   @override
   State<VotingOptions> createState() => _VotingOptionsState();
@@ -11,12 +12,10 @@ class VotingOptions extends StatefulWidget {
 class _VotingOptionsState extends State<VotingOptions> {
   int? selectedOption;
 
-  final List<String> options = ['Tham gia', 'Không tham gia'];
-
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: List.generate(options.length, (index) {
+      children: List.generate(widget.poll.pollOptions.length, (index) {
         return ListTile(
           contentPadding: EdgeInsets.zero,
           leading: Radio<int>(
@@ -28,7 +27,7 @@ class _VotingOptionsState extends State<VotingOptions> {
               });
             },
           ),
-          title: Text(options[index]),
+          title: Text(widget.poll.pollOptions[index].type),
         );
       }),
     );

@@ -1,5 +1,6 @@
 import 'package:ecots_fe/components/new_feeds/skeleton.dart';
 import 'package:ecots_fe/components/new_feeds/voting_options.dart';
+import 'package:ecots_fe/controllers/poll_controller.dart';
 import 'package:ecots_fe/controllers/user_controller.dart';
 import 'package:ecots_fe/models/newsfeeds/newsfeed.dart';
 import 'package:ecots_fe/screens/new_feeds/vote_screen.dart';
@@ -7,9 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:intl/intl.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_style.dart';
+import '../../models/polls/poll.dart';
 import '../../models/user.dart';
 import 'comment_section.dart';
 
@@ -23,17 +27,30 @@ class NewFeedCard extends StatefulWidget {
 
 class _NewFeedCardState extends State<NewFeedCard> {
   final UserController _userController = Get.find();
+  final PollController _pollController = Get.put(PollController());
 
   User? user;
+  Poll? poll;
+  int voteCount = 0;
 
   @override
   initState() {
     super.initState();
     _getUser();
+    _getPoll();
   }
 
   Future<void> _getUser() async {
     user = await _userController.getUserById(widget.newsfeed.userId);
+    setState(() {});
+  }
+
+  void _getPoll() async {
+    voteCount = 0;
+    poll = await _pollController.getPoll(widget.newsfeed.id);
+    for (var option in poll!.pollOptions) {
+      voteCount += option.votes.length;
+    }
     setState(() {});
   }
 
@@ -43,7 +60,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: [
               Row(
@@ -64,7 +81,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                       as ImageProvider,
                             )),
                       ),
-                      Gap(10),
+                      const Gap(10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -73,7 +90,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                   user?.fullName ?? '',
                                   style: kLableTextGreenWeightW600Size16,
                                 )
-                              : Skeleton(
+                              : const Skeleton(
                                   width: 200,
                                   height: 20,
                                 ),
@@ -85,10 +102,45 @@ class _NewFeedCardState extends State<NewFeedCard> {
                       )
                     ],
                   )),
-                  Container(child: SvgPicture.asset('assets/icons/3dot.svg'))
+                  SvgPicture.asset('assets/icons/3dot.svg')
                 ],
               ),
-              Gap(10),
+              const Gap(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(widget.newsfeed.content,
+                      textAlign: TextAlign.start,
+                      style: kLableTextGreenWeightW400Size16),
+                ],
+              ),
+              const Gap(10),
+              widget.newsfeed.startedAt != null
+                  ? Row(children: [
+                      Text('Start date: ',
+                          style: kLableTextGreenWeightW400Size16),
+                      Text(
+                          DateFormat('yyyy-MM-dd')
+                              .format(widget.newsfeed.startedAt!),
+                          style: kLableTextGreenWeightW400Size16),
+                    ])
+                  : const SizedBox(),
+              widget.newsfeed.startedAt != null
+                  ? const Gap(5)
+                  : const SizedBox(),
+              widget.newsfeed.endedAt != null
+                  ? Row(children: [
+                      Text('Start date: ',
+                          style: kLableTextGreenWeightW400Size16),
+                      Text(
+                          DateFormat('yyyy-MM-dd')
+                              .format(widget.newsfeed.startedAt!),
+                          style: kLableTextGreenWeightW400Size16),
+                    ])
+                  : const SizedBox(),
+              widget.newsfeed.endedAt != null
+                  ? const Gap(10)
+                  : const SizedBox(),
               AspectRatio(
                 aspectRatio: 1,
                 child: Builder(builder: (context) {
@@ -153,7 +205,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                     image: DecorationImage(
                                         image: NetworkImage(
                                             widget.newsfeed.mediaUrls[0])),
-                                    borderRadius: BorderRadius.only(
+                                    borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(20),
                                         topRight: Radius.circular(20))),
                               ),
@@ -177,12 +229,12 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                 fit: StackFit.expand,
                                 children: [
                                   Container(
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         color: AppColors.green,
                                         borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(20))),
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.play_circle_fill,
                                     size: 50,
                                     color: AppColors.white,
@@ -197,7 +249,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                 fit: StackFit.expand,
                                 children: [
                                   Container(
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         color: AppColors.green,
                                         borderRadius: BorderRadius.only(
                                             bottomRight: Radius.circular(20))),
@@ -214,7 +266,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
                 }),
               ),
 
-              Gap(10),
+              const Gap(10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
@@ -256,24 +308,26 @@ class _NewFeedCardState extends State<NewFeedCard> {
 
               InkWell(
                 onTap: () {
-                  Get.to(() => const VoteScreen());
+                  Get.to(() => VoteScreen(
+                        poll: poll!,
+                      ));
                 },
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Poll ends: March 12, 2021',
-                      style: TextStyle(fontSize: 15, color: Colors.black),
-                    ),
-                    const Text(
-                      '10 votes',
-                      style: TextStyle(fontSize: 15, color: Colors.black),
+                    Text(
+                      '$voteCount votes',
+                      style: const TextStyle(fontSize: 15, color: Colors.black),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 8),
-              const VotingOptions(),
+              poll != null
+                  ? VotingOptions(
+                      poll: poll!,
+                    )
+                  : Container(),
               const SizedBox(height: 8),
               //const CommentsSection()
             ],

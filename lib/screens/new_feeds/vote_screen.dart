@@ -1,10 +1,13 @@
+import 'package:ecots_fe/models/polls/vote.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../constants/app_style.dart';
+import '../../models/polls/poll.dart';
 
 class VoteScreen extends StatefulWidget {
-  const VoteScreen({super.key});
+  final Poll poll;
+  const VoteScreen({super.key, required this.poll});
 
   @override
   State<VoteScreen> createState() => _VoteScreenState();
@@ -14,39 +17,47 @@ class _VoteScreenState extends State<VoteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Text("Votes", style: kLableTextBlackW600,),
-      centerTitle: true,
+      appBar: AppBar(
+        title: Text(
+          "Votes",
+          style: kLableTextBlackW600,
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Tham gia', style: kLableTextStyleTilteGreen,),
-              _buildUserCard(),
-              _buildUserCard(),
-              _buildUserCard(),
-              _buildUserCard(),
-              _buildUserCard(),
-          
-              Text('Không tham gia', style: kLableTextStyleTilteGreen,),
-              _buildUserCard(),
-              _buildUserCard(),
-              _buildUserCard(),
-              _buildUserCard(),
-              _buildUserCard(),
-              
-            ],
-          ),
-        ),
+        child: ListView.builder(
+            itemCount: widget.poll.pollOptions.length,
+            itemBuilder: (context, index) {
+              final pollOption = widget.poll.pollOptions[index];
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        pollOption.type,
+                        style: kLableTextStyleTilteGreen,
+                      ),
+                    ],
+                  ),
+                  ListView.builder(
+                    itemCount: pollOption.votes.length,
+                    itemBuilder: (context, index) =>
+                        _buildUserCard(pollOption.votes[index]),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                  ),
+                ],
+              );
+            }),
       ),
     );
   }
 
-  Widget _buildUserCard() {
-    return  Container(
-      margin: EdgeInsets.symmetric(vertical: 5.0),
+  Widget _buildUserCard(Vote vote) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(
         children: [
           Container(
@@ -54,14 +65,19 @@ class _VoteScreenState extends State<VoteScreen> {
             width: 50,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(image: AssetImage('assets/images/default_avatar.jpg'))
-            ),
+                image: DecorationImage(
+                    image: vote.avatarUrl != null
+                        ? NetworkImage(vote.avatarUrl!)
+                        : const AssetImage('assets/images/default_avatar.jpg')
+                            as ImageProvider)),
           ),
           Gap(10),
-          Text('Thạch Sang', style: kLableTilte16Black,)
+          Text(
+            vote.fullName,
+            style: kLableTilte16Black,
+          )
         ],
       ),
     );
   }
-
 }

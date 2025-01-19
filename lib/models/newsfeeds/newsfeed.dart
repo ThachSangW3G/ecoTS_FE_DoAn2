@@ -8,6 +8,9 @@ class Newsfeed {
   final int pollId;
   final List<int> commentIds;
   final List<int> reactIds;
+  final DateTime? createdAt;
+  final DateTime? startedAt;
+  final DateTime? endedAt;
 
   Newsfeed(
       {required this.id,
@@ -18,7 +21,10 @@ class Newsfeed {
       required this.userId,
       required this.pollId,
       required this.commentIds,
-      required this.reactIds});
+      required this.reactIds,
+      required this.createdAt,
+      required this.startedAt,
+      required this.endedAt});
 
   factory Newsfeed.fromJson(Map<String, dynamic> json) {
     return Newsfeed(
@@ -40,6 +46,14 @@ class Newsfeed {
               ?.map((e) => int.tryParse(e.toString()) ?? 0)
               .toList() ??
           [],
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'])
+          : null,
+      startedAt: json['startedAt'] != null
+          ? DateTime.tryParse(json['startedAt'])
+          : null,
+      endedAt:
+          json['endedAt'] != null ? DateTime.tryParse(json['endedAt']) : null,
     );
   }
 
@@ -54,6 +68,9 @@ class Newsfeed {
       'pollId': pollId,
       'commentIds': commentIds,
       'reactIds': reactIds,
+      'createdAt': createdAt?.toIso8601String(),
+      'startedAt': startedAt?.toIso8601String(),
+      'endedAt': endedAt?.toIso8601String(),
     };
   }
 }

@@ -61,4 +61,94 @@ class NewsfeedController extends GetxController {
       print(e);
     }
   }
+
+  Future<bool> getReactStatus(int newsfeedId, int userId) async {
+    final uri = Uri.parse(
+        '${_apiService.baseUrl}/newsfeed/$newsfeedId/react-status?userId=$userId');
+    final headers = {'Content-Type': 'application/json'};
+
+    try {
+      final response = await http.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+        return jsonData as bool;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> updateReact(int newsfeedId, int userId) async {
+    final url = Uri.parse(
+        '${_apiService.baseUrl}/newsfeed/$newsfeedId/reacts/update?userId=$userId');
+    final headers = {'Content-Type': 'application/json'};
+
+    try {
+      final response = await http.put(url, headers: headers);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> createReact(int newsfeedId, int userId) async {
+    final url = Uri.parse(
+        '${_apiService.baseUrl}/newsfeed/$newsfeedId/reacts?userId=$userId&status=true');
+    final headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.post(url, headers: headers);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<int> countReacts(int newsfeedId) async {
+    final url =
+        Uri.parse('${_apiService.baseUrl}/newsfeed/$newsfeedId/reacts/count');
+    final headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(utf8.decode(response.bodyBytes)) as int;
+        return jsonData;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      print(e);
+      return 0;
+    }
+  }
+
+  Future<int> countComments(int newsfeedId) async {
+    final url =
+        Uri.parse('${_apiService.baseUrl}/newsfeed/$newsfeedId/comments/count');
+    final headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(utf8.decode(response.bodyBytes)) as int;
+        return jsonData;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      print(e);
+      return 0;
+    }
+  }
 }

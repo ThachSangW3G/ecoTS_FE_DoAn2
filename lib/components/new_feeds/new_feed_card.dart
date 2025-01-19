@@ -1,5 +1,6 @@
 import 'package:ecots_fe/components/new_feeds/skeleton.dart';
 import 'package:ecots_fe/components/new_feeds/voting_options.dart';
+import 'package:ecots_fe/controllers/newsfeed_controller.dart';
 import 'package:ecots_fe/controllers/poll_controller.dart';
 import 'package:ecots_fe/controllers/user_controller.dart';
 import 'package:ecots_fe/models/newsfeeds/newsfeed.dart';
@@ -28,16 +29,23 @@ class NewFeedCard extends StatefulWidget {
 class _NewFeedCardState extends State<NewFeedCard> {
   final UserController _userController = Get.find();
   final PollController _pollController = Get.put(PollController());
+  final NewsfeedController _newsfeedController = Get.put(NewsfeedController());
 
   User? user;
   Poll? poll;
   int voteCount = 0;
+  bool statusReact = false;
+  int countReacts = 0;
+  int countComments = 0;
 
   @override
   initState() {
     super.initState();
     _getUser();
     _getPoll();
+    _getStatusReact();
+    _countReacts();
+    _countComments();
   }
 
   Future<void> _getUser() async {
@@ -51,6 +59,37 @@ class _NewFeedCardState extends State<NewFeedCard> {
     for (var option in poll!.pollOptions) {
       voteCount += option.votes.length;
     }
+    setState(() {});
+  }
+
+  void _getStatusReact() async {
+    statusReact = await _newsfeedController.getReactStatus(
+        widget.newsfeed.id, _userController.currentUser.value!.id);
+    _countReacts();
+    setState(() {});
+  }
+
+  void _updateReact() async {
+    final success = await _newsfeedController.updateReact(
+        widget.newsfeed.id, _userController.currentUser.value!.id);
+    if (success) {
+      _getStatusReact();
+    } else {
+      final successCreate = await _newsfeedController.createReact(
+          widget.newsfeed.id, _userController.currentUser.value!.id);
+      if (successCreate) {
+        _getStatusReact();
+      }
+    }
+  }
+
+  void _countReacts() async {
+    countReacts = await _newsfeedController.countReacts(widget.newsfeed.id);
+    setState(() {});
+  }
+
+  void _countComments() async {
+    countComments = await _newsfeedController.countComments(widget.newsfeed.id);
     setState(() {});
   }
 
@@ -95,7 +134,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                   height: 20,
                                 ),
                           Text(
-                            '45 mins',
+                            widget.newsfeed.timeAgo,
                             style: kLableTextItalic,
                           ),
                         ],
@@ -109,9 +148,11 @@ class _NewFeedCardState extends State<NewFeedCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(widget.newsfeed.content,
-                      textAlign: TextAlign.start,
-                      style: kLableTextGreenWeightW400Size16),
+                  Expanded(
+                    child: Text(widget.newsfeed.content,
+                        textAlign: TextAlign.start,
+                        style: kLableTextGreenWeightW400Size16),
+                  ),
                 ],
               ),
               const Gap(10),
@@ -272,19 +313,19 @@ class _NewFeedCardState extends State<NewFeedCard> {
                 child: Row(
                   children: [
                     Text(
-                      '${widget.newsfeed.reactIds.length} likes',
+                      '$countReacts likes',
                       style: kLableTextItalic,
                     ),
                     const Spacer(),
                     Text(
-                      '${widget.newsfeed.commentIds.length} comments',
+                      '$countComments comments',
                       style: kLableTextItalic,
                     ),
-                    const Spacer(),
-                    Text(
-                      '1.8k shares',
-                      style: kLableTextItalic,
-                    )
+                    // const Spacer(),
+                    // Text(
+                    //   '1.8k shares',
+                    //   style: kLableTextItalic,
+                    // )
                   ],
                 ),
               ),
@@ -297,7 +338,9 @@ class _NewFeedCardState extends State<NewFeedCard> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildActionButton(Icons.thumb_up, 'Like', () {}),
+                    _buildActionButton(Icons.thumb_up, 'Like', () {
+                      _updateReact();
+                    }, status: statusReact),
                     _buildActionButton(Icons.comment, 'Comment', () {
                       Get.to(() => CommentsSection(newsfeed: widget.newsfeed));
                     }),
@@ -326,6 +369,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
               poll != null
                   ? VotingOptions(
                       poll: poll!,
+                      newsfeed: widget.newsfeed,
                     )
                   : Container(),
               const SizedBox(height: 8),
@@ -342,13 +386,14 @@ class _NewFeedCardState extends State<NewFeedCard> {
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, VoidCallback? onTap) {
+  Widget _buildActionButton(IconData icon, String label, VoidCallback? onTap,
+      {bool status = false}) {
     return TextButton.icon(
       onPressed: onTap,
-      icon: Icon(icon, color: Colors.grey),
+      icon: Icon(icon, color: status ? AppColors.green : Colors.grey),
       label: Text(
         label,
-        style: const TextStyle(color: Colors.grey),
+        style: TextStyle(color: status ? AppColors.green : Colors.grey),
       ),
     );
   }

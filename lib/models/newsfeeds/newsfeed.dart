@@ -1,3 +1,5 @@
+import 'package:timeago/timeago.dart' as timeago;
+
 class Newsfeed {
   final int id;
   final String content;
@@ -11,6 +13,7 @@ class Newsfeed {
   final DateTime? createdAt;
   final DateTime? startedAt;
   final DateTime? endedAt;
+  final String timeAgo;
 
   Newsfeed(
       {required this.id,
@@ -24,7 +27,8 @@ class Newsfeed {
       required this.reactIds,
       required this.createdAt,
       required this.startedAt,
-      required this.endedAt});
+      required this.endedAt,
+      required this.timeAgo});
 
   factory Newsfeed.fromJson(Map<String, dynamic> json) {
     return Newsfeed(
@@ -47,13 +51,18 @@ class Newsfeed {
               .toList() ??
           [],
       createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'])
+          ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'])
           : null,
       startedAt: json['startedAt'] != null
-          ? DateTime.tryParse(json['startedAt'])
+          ? DateTime.fromMillisecondsSinceEpoch(json['startedAt'])
           : null,
-      endedAt:
-          json['endedAt'] != null ? DateTime.tryParse(json['endedAt']) : null,
+      endedAt: json['endedAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['endedAt'])
+          : null,
+      timeAgo: json['createdAt'] != null
+          ? timeago
+              .format(DateTime.fromMillisecondsSinceEpoch(json['createdAt']))
+          : '',
     );
   }
 

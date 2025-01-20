@@ -270,16 +270,13 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                 fit: StackFit.expand,
                                 children: [
                                   Container(
-                                    decoration: const BoxDecoration(
-                                        color: AppColors.green,
-                                        borderRadius: BorderRadius.only(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                widget.newsfeed.mediaUrls[1])),
+                                        borderRadius: const BorderRadius.only(
                                             bottomLeft: Radius.circular(20))),
                                   ),
-                                  const Icon(
-                                    Icons.play_circle_fill,
-                                    size: 50,
-                                    color: AppColors.white,
-                                  )
                                 ],
                               )),
                               const SizedBox(
@@ -290,9 +287,11 @@ class _NewFeedCardState extends State<NewFeedCard> {
                                 fit: StackFit.expand,
                                 children: [
                                   Container(
-                                    decoration: const BoxDecoration(
-                                        color: AppColors.green,
-                                        borderRadius: BorderRadius.only(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                widget.newsfeed.mediaUrls[2])),
+                                        borderRadius: const BorderRadius.only(
                                             bottomRight: Radius.circular(20))),
                                   ),
                                 ],

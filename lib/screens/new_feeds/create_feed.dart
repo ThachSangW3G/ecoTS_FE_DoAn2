@@ -1,12 +1,15 @@
 import 'dart:io';
 
+import 'package:ecots_fe/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_style.dart';
+import '../../controllers/newsfeed_controller.dart';
 
 class CreateFeeedScreen extends StatefulWidget {
   const CreateFeeedScreen({super.key});
@@ -16,6 +19,9 @@ class CreateFeeedScreen extends StatefulWidget {
 }
 
 class _CreateFeedScreenState extends State<CreateFeeedScreen> {
+  final NewsfeedController _newsfeedController = Get.put(NewsfeedController());
+  final UserController _userController = Get.find();
+
   bool isPublic = true; // Default to Public
 
   List<String> _selectedImages = []; // Lưu đường dẫn các ảnh đã chọn
@@ -29,6 +35,9 @@ class _CreateFeedScreenState extends State<CreateFeeedScreen> {
   final TextEditingController _aboutController = TextEditingController();
 
   final ImagePicker picker = ImagePicker();
+
+  bool _isLoading = false;
+
   Future<void> _pickMultipleImages() async {
     try {
       final result = await picker.pickMultiImage();
@@ -75,11 +84,35 @@ class _CreateFeedScreenState extends State<CreateFeeedScreen> {
 
   void _submitForm() {
     if (validateForm()) {
-      // Submit form here
+      _createNewsfeed();
     } else {
       // Hien thong bao loi
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Please fill in all required fields.")));
+    }
+  }
+
+  void _createNewsfeed() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final success = await _newsfeedController.createNewsfeed(
+      content: _aboutController.text,
+      userId: _userController.currentUser.value!.id,
+      pollOptions:
+          _pollOptionControllers.map((controller) => controller.text).toList(),
+      startedAt: _seleteStartedDate,
+      endedAt: _selectEndedDate,
+      files: _selectedImages.map((imagePath) => File(imagePath)).toList(),
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Create newsfeed successfully")));
+      Get.back();
     }
   }
 
@@ -379,12 +412,16 @@ class _CreateFeedScreenState extends State<CreateFeeedScreen> {
                     backgroundColor: AppColors.green,
                   ),
                   onPressed: () {
-                    // Handle create community logic
+                    _submitForm();
                   },
-                  child: Text(
-                    "Create newsfeed",
-                    style: kLableTextBlackW600Size15,
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          color: AppColors.white,
+                        )
+                      : Text(
+                          "Create newsfeed",
+                          style: kLableTextBlackW600Size15,
+                        ),
                 ),
               ),
             ],

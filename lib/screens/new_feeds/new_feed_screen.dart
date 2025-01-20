@@ -1,6 +1,7 @@
 import 'package:ecots_fe/controllers/newsfeed_controller.dart';
 import 'package:ecots_fe/controllers/user_controller.dart';
 import 'package:ecots_fe/screens/new_feeds/tab_explore.dart';
+import 'package:ecots_fe/screens/new_feeds/tab_your_activity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -203,10 +204,6 @@ class _NewFeedScreenState extends State<NewFeedScreen>
                   ),
                   Tab(
                     child:
-                        Text('NEW FOR YOU', style: kLableTextBlackW600Size13),
-                  ),
-                  Tab(
-                    child:
                         Text('YOUR ACTIVITY', style: kLableTextBlackW600Size13),
                   ),
                 ],
@@ -220,10 +217,9 @@ class _NewFeedScreenState extends State<NewFeedScreen>
                         800, // Chỉ cần thêm chiều cao để xem nội dung bên trong
                     child: TabBarView(
                       controller: _tabController, // Gắn TabController
-                      children: [
+                      children: const [
                         TabExplore(),
-                        Center(child: Text('Content of Tab 2')),
-                        Center(child: Text('Content of Tab 3')),
+                        TabYourActivity(),
                       ],
                     ),
                   ),

@@ -57,6 +57,49 @@ class UserController extends GetxController {
     } catch (e) {}
   }
 
+  Future<void> getUser() async {
+    final prefs = await _prefs;
+    final accessToken = prefs.getString('tokenAccess');
+    final uri =
+        Uri.parse('${_apiService.baseUrl}/user/token?token=$accessToken');
+
+    final headers = {'Content-Type': 'application/json'};
+
+    try {
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(utf8.decode(response.bodyBytes));
+        print(responseData['id']);
+        final int id = responseData['id'];
+
+        final String email = responseData['email'];
+        final String fullName = responseData['fullName'];
+
+        final String? phoneNumber = responseData['phoneNumber'];
+
+        final String? address = responseData['address'];
+        final String? gender = responseData['gender'];
+        final DateTime dayOfBirth =
+            DateTime.fromMillisecondsSinceEpoch(responseData['dayOfBirth']);
+
+        final String? personalId = responseData['personalId'];
+        final String? avatarUrl = responseData['avatarUrl'];
+
+        currentUser.value = User(
+            id: id,
+            fullName: fullName,
+            phoneNumber: phoneNumber,
+            address: address,
+            dayOfBirth: dayOfBirth,
+            personalId: personalId,
+            email: email,
+            gender: gender,
+            avatarUrl: avatarUrl);
+      }
+    } catch (e) {}
+  }
+
   Future<bool> changeInfor(
       String accessToken,
       String fullName,

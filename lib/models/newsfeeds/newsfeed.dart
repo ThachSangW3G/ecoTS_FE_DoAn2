@@ -6,7 +6,7 @@ class Newsfeed {
   final List<String> mediaUrls;
   final int? sponsorId;
   final double? pointForActivity;
-  final int userId;
+  final int? userId;
   final int pollId;
   final List<int> commentIds;
   final List<int> reactIds;

@@ -132,7 +132,9 @@ class _RewardDetailScreenState extends State<RewardDetailScreen> {
                   InkWell(
                     onTap: () {
                       if (widget.reward.stock > 0) {
-                        Get.to(() => const DeliveryScreen());
+                        Get.to(() => DeliveryScreen(
+                              reward: widget.reward,
+                            ));
                       } else {
                         showToast('This reward is out of stock');
                       }

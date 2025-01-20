@@ -207,4 +207,46 @@ class NewsfeedController extends GetxController {
       return 0;
     }
   }
+
+  Future<bool> qrCodeUse(int qrCodeId, String userEmail) async {
+    final url = Uri.parse(
+        '${_apiService.baseUrl}/sponsor/qrcode/use?qrCodeId=$qrCodeId&userEmail=$userEmail');
+    final headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.post(url, headers: headers);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+
+  Future<bool> getExistsReact(int newsfeedId, int userId) async{
+    final url = Uri.parse('${_apiService.baseUrl}/newsfeed/$newsfeedId/reacts/exists?userId=$userId');
+    final headers = {'Content-Type': 'application/json'};
+
+    try{
+      final response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+        if (jsonData['hasReacted'] as bool) {
+          return true;
+        }
+        return false;
+      } else {
+        return false;
+      }
+    }catch(e){
+      print(e);
+      return false;
+    }
+  }
+
+
 }

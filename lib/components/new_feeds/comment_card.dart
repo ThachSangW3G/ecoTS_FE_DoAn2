@@ -67,7 +67,7 @@ class _CommentCardState extends State<CommentCard> {
                           width: 200,
                         ),
                   Text(
-                    '30 mins',
+                    widget.comment.timeAgo,
                     style: kLableTextItalic,
                   ),
                 ],

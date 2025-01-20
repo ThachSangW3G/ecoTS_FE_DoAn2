@@ -1,3 +1,4 @@
+import 'package:ecots_fe/controllers/user_controller.dart';
 import 'package:ecots_fe/screens/new_feeds/new_feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -27,11 +28,17 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int selectedTab = 0;
   List<NavModel> items = [];
 
+  final UserController _userController = Get.put(UserController());
+
+  void _getUser() async {
+    _userController.getUser();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    _getUser();
     items = [
       NavModel(
         page: const HomeScreen(),

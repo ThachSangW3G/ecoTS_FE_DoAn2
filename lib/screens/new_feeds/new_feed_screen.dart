@@ -13,6 +13,7 @@ import '../../constants/app_style.dart';
 import '../../models/newsfeeds/newsfeed.dart';
 import '../notifications/notification_screen.dart';
 import 'create_feed.dart';
+import 'qr_code_sponsor.dart';
 
 class NewFeedScreen extends StatefulWidget {
   const NewFeedScreen({super.key});
@@ -32,7 +33,7 @@ class _NewFeedScreenState extends State<NewFeedScreen>
   void initState() {
     super.initState();
     _tabController =
-        TabController(length: 3, vsync: this); // Khởi tạo TabController
+        TabController(length: 2, vsync: this); // Khởi tạo TabController
   }
 
   @override
@@ -105,17 +106,29 @@ class _NewFeedScreenState extends State<NewFeedScreen>
                                 children: [
                                   InkWell(
                                       onTap: () async {
-                                        Get.to(() => CreateFeeedScreen());
+                                        Get.to(() => const CreateFeeedScreen());
                                       },
                                       child: SvgPicture.asset(
-                                          'assets/icons/bell.svg')),
+                                          'assets/icons/plus-circle.svg')),
+                                  const Gap(20.0),
+                                  InkWell(
+                                      onTap: () async {
+                                        Get.to(
+                                            () => const QRCodeSponsorScreen());
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/icons/qr-code.svg',
+                                        color: Colors.black,
+                                        height: 25,
+                                        width: 25,
+                                      )),
                                 ],
                               ),
                             )
                           ],
                         ),
                       ),
-                      Gap(10.0),
+                      const Gap(10.0),
                       // SingleChildScrollView(
                       //   scrollDirection: Axis.horizontal,
                       //   child: Row(

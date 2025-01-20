@@ -49,7 +49,7 @@ class _NewFeedCardState extends State<NewFeedCard> {
   }
 
   Future<void> _getUser() async {
-    user = await _userController.getUserById(widget.newsfeed.userId);
+    user = await _userController.getUserById(widget.newsfeed.userId!);
     setState(() {});
   }
 

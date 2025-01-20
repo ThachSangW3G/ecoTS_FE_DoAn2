@@ -58,4 +58,22 @@ class RewardController extends GetxController {
       return [];
     }
   }
+
+  Future<bool> updateRewardHistory(int userId, double point, int rewardItemId,
+      int numberOfItem, String locationId) async {
+    final uri = Uri.parse(
+        '${_apiService.baseUrl}/reward/update-reward-history?userId=$userId&point=$point&rewardItemId=$rewardItemId&numberOfItem=$numberOfItem&locationId=$locationId');
+    final headers = {'Content-Type': 'application/json'};
+    try {
+      final response = await http.put(uri, headers: headers);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }
